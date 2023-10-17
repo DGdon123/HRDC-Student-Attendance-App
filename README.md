@@ -1,4 +1,4 @@
-# ym_daa_toce
+# HRDC-Student-Attendance-App
 
 A new Flutter project.
 
