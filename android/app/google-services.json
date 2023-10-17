@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "487916643240",
+    "project_id": "ym-hrdc-app-2023",
+    "storage_bucket": "ym-hrdc-app-2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487916643240:android:8438a1a19ef55651ecb39d",
+        "android_client_info": {
+          "package_name": "com.example.ym_daa_toce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487916643240-p7i1iffji0l1sjqjcgd31of9e6hqsj71.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8K7OYEpllTOYOTjL5emnIYTeUjs81g24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487916643240-p7i1iffji0l1sjqjcgd31of9e6hqsj71.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "487916643240-rbsorkbjm64811pfma4p5emufb9j4u6q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ymDaaToce"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
