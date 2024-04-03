@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ym_daa_toce/features/auth/data/models/change_password_model.dart/change_password_request_model.dart';
 import 'package:ym_daa_toce/features/auth/data/models/change_password_model.dart/change_password_response_model.dart';
 import 'package:ym_daa_toce/features/auth/data/repositories/auth_respository.dart';
+import 'package:ym_daa_toce/features/auth/presentation/login/presentation/views/login_screen.dart';
 import 'package:ym_daa_toce/features/dashboard/presentation/views/dashboard.dart';
+import 'package:ym_daa_toce/utils/bottom_bar/bottom_bar.dart';
 import 'package:ym_daa_toce/utils/custom_navigation/app_nav.dart';
 import 'package:ym_daa_toce/utils/custom_snack_bar/custom_snack_bar.dart';
 
@@ -25,7 +27,7 @@ class ChangePasswordController
       state = AsyncValue.data(r);
       if (context.mounted) {
         showCustomSnackBar(r.message, context, isError: false);
-        pushAndRemoveUntil(context, const Dashboard());
+        pushAndRemoveUntil(context, const LoginScreen());
       }
     });
   }

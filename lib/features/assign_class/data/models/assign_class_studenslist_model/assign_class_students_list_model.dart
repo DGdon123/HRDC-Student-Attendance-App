@@ -133,11 +133,11 @@ class Count {
 }
 
 class StudentsList {
-  final String studentId;
+  final int studentId;
   final String name;
   final String gender;
   final String section;
-  final String rollNumber;
+  final int rollNumber;
   final int status;
   bool value;
   bool find;
@@ -152,12 +152,12 @@ class StudentsList {
       this.find = false});
 
   StudentsList copyWith({
-    String? studentId,
+    int? studentId,
     String? name,
     String? gender,
     int? status,
     String? section,
-    String? rollNumber,
+    int? rollNumber,
   }) {
     return StudentsList(
       studentId: studentId ?? this.studentId,

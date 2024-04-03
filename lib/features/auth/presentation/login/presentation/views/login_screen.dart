@@ -166,14 +166,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
 
-                  CustomAppForm(readOnly: false,
+                  CustomAppForm(
+                    readOnly: false,
                     textEditingController: emailController,
                     isPrefixIconrequired: true,
                     prefixIcon: CupertinoIcons.envelope,
                     lable: AppConst.kemail,
                     validator: (input) => input!.isValidEmail(input),
                   ),
-                  CustomAppForm(readOnly: false,
+                  CustomAppForm(
+                    readOnly: false,
                     obscureText: passwordObcure,
                     textEditingController: passwordController,
                     isPrefixIconrequired: true,

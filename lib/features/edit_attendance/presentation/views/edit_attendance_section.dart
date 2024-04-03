@@ -125,11 +125,11 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
       // Loop through the attendList to check student status
       for (var student in widget.reasons!.attendList) {
         if (widget.student.studentId == student.student_id) {
-          if (student.status == "0") {
+          if (student.status == 0) {
             absentButtonSelected = true;
             selectedAbsentReasonIndex = int.parse(student.reason_id.toString());
             break; // Stop looping once Absent status is found
-          } else if (student.status == "1") {
+          } else if (student.status == 1) {
             presentButtonSelected = true;
             break; // Stop looping once Present status is found
           }
@@ -161,11 +161,11 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
     if (!isDataAdded && widget.reasons!.attendList.isNotEmpty) {
       for (var student in widget.reasons!.attendList) {
         if (widget.student.studentId == student.student_id) {
-          if (student.status == "1") {
+          if (student.status == 1) {
             final inputData = EditStudentReasonModel(
               text: "Present",
               status: 1,
-              studentId: int.parse(widget.student.studentId),
+              studentId: widget.student.studentId,
             );
 
             List<int> studentIdList =
@@ -185,12 +185,12 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
             }
             isDataAdded = true; // Set the flag to true
             break; // Stop looping once Absent status is found
-          } else if (student.status == "0") {
+          } else if (student.status == 0) {
             final inputData2 = EditStudentReasonModel(
               text: "Absent",
               status: 0,
               reasonId: int.parse(student.reason_id.toString()),
-              studentId: int.parse(widget.student.studentId),
+              studentId: widget.student.studentId,
             );
             List<int> studentIdList =
                 studentReasonList.map((e) => e.studentId).toList();
@@ -266,8 +266,7 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
                                               EditStudentReasonModel(
                                             text: "Present",
                                             status: 1,
-                                            studentId: int.parse(
-                                                widget.student.studentId),
+                                            studentId: widget.student.studentId,
                                           );
                                           // Update the existing item's status and text
                                           // Use the current studentReasonList from the context
@@ -308,8 +307,7 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
                                               EditStudentReasonModel(
                                             text: "Absent",
                                             status: 0,
-                                            studentId: int.parse(
-                                                widget.student.studentId),
+                                            studentId: widget.student.studentId,
                                           );
 
                                           // Update the existing item's status and text
@@ -353,8 +351,7 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
                                   final inputData = EditStudentReasonModel(
                                       text: "Absent",
                                       status: 0,
-                                      studentId:
-                                          int.parse(widget.student.studentId),
+                                      studentId: widget.student.studentId,
                                       reasonId: absentReasons[
                                               absentReasons.indexOf(e)]
                                           .id);
@@ -394,8 +391,7 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
                                   final inputData = EditStudentReasonModel(
                                       text: "Absent",
                                       status: 0,
-                                      studentId:
-                                          int.parse(widget.student.studentId),
+                                      studentId: widget.student.studentId,
                                       reasonId: absentReasons[
                                               absentReasons.indexOf(e)]
                                           .id);
@@ -406,8 +402,8 @@ class _AttendanceSectionState extends ConsumerState<EditAttendanceSection> {
                                           inputData.studentId)
                                       .first;
                                   if (prevData == inputData) {
-                                    missedStudents
-                                        .add(widget.student.studentId);
+                                    missedStudents.add(
+                                        widget.student.studentId as String);
                                     ref
                                         .watch(
                                             absentReasonMissingStudentsProvider

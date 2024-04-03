@@ -1,36 +1,3 @@
-// import 'package:dio/dio.dart';
-// import 'package:ym_daa_toce/core/api_const/api_const.dart';
-// import 'package:ym_daa_toce/core/api_exception/dio_exception.dart';
-// import 'package:ym_daa_toce/core/db_clienet.dart';
-// import 'package:ym_daa_toce/features/auth/data/models/login_reponse_model.dart';
-
-// class ApiClient {
-//   final DbClient _dbClient;
-//   ApiClient(this._dbClient)
-
-//    Future request(
-//   {required String path,
-//       String type = "get",
-//       Map<String, dynamic> data = const {},}) async {
-//     final String dbResult= await _dbClient.getData(key: "auth");
-//     final LoginResponseModel loginResponseModel =LoginResponseModel.fromJson(dbResult);
-//     final String token =loginResponseModel.token;
-//     final Dio dio = Dio(BaseOptions(baseUrl: ApiConst.baseUrl, headers: {
-//       "Content-Type": "application/json",
-//       "Accept": "application/json",
-//       "Authorization": "Bearer $token"
-//     }));
-
-//     try {
-//       final result=type=="get"?await dio.get(path):await dio.post(path,data:data);
-//       return result.data;
-//     } on DioError catch (e) {
-//       throw DioException.fromDioError(e);
-
-//     }
-//   }
-// }
-
 import 'dart:convert';
 import 'dart:developer';
 

@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class LoginResponseModel {
-  final String userId;
+  final int userId;
   final String userName;
   final String token;
   final String phone;
@@ -14,7 +14,7 @@ class LoginResponseModel {
   });
 
   LoginResponseModel copyWith(
-      {String? userId, String? userName, String? token, String? phone}) {
+      {int? userId, String? userName, String? token, String? phone}) {
     return LoginResponseModel(
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,

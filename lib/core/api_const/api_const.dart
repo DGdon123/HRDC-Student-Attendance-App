@@ -1,7 +1,7 @@
 class ApiConst {
 //API
   // static const String baseUrl = "https://hrdc.teamym.com/api/";
-  static const String baseUrl = "https://hrdc.palikaijalash.com/api/";
+  static const String baseUrl = "https://nepalsms.org/api/";
   //Auth
   static const String kauthLoigin = "login";
   static const String kauthChangePassword = "change-password";

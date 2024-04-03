@@ -14,6 +14,8 @@ import 'package:ym_daa_toce/const/app_const.dart';
 import 'package:ym_daa_toce/const/app_dimension.dart';
 import 'package:ym_daa_toce/const/app_fonts.dart';
 import 'package:ym_daa_toce/features/assign_class/data/models/attendance_reason/attendance_resons_model.dart';
+import 'package:ym_daa_toce/features/assign_class/presentation/controller/assign_class_controller.dart';
+import 'package:ym_daa_toce/features/report/report_controller.dart';
 import 'package:ym_daa_toce/utils/mediaquery_extention.dart';
 
 import '../../data/data_source/assign_class_data_source.dart';
@@ -163,11 +165,11 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
 
     final assingedClass = ref.watch(assignedClassDetailControllerProvider(
         ClassSectionParams(
-            classId: int.parse(widget.e.class_id),
+            classId: widget.e.class_id,
             sectionid: int.parse(widget.e.section_id))));
     // log(nepaliDate.toString());
     return Scaffold(
-        floatingActionButton: currentDate.hour < 12
+        floatingActionButton: currentDate.hour < 24
             ? isLoading
                 ? Center(
                     child: CircularProgressIndicator(
@@ -228,15 +230,15 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                 return;
                               }
                               Map<String, dynamic> dataObject = {
-                                "class_id": int.parse(widget.e.class_id),
+                                "class_id": widget.e.class_id,
                                 "attendance_date": nepaliCurrentDate,
                                 // "attendance_date": "2024-01-03",
                                 "attendance_date_ad": date,
                                 // "attendance_date_ad": "2024-01-03",
                                 "attendance_date_bs": devanagariDate,
                                 // "attendance_date_bs": "2081-01-03",
-                                "school_id": int.parse(widget.e.school_id),
-                                "teacher_id": int.parse(widget.e.teacher_id),
+                                "school_id": widget.e.school_id,
+                                "teacher_id": widget.e.teacher_id,
                                 "section_id": int.parse(widget.e.section_id)
                               };
 
@@ -272,6 +274,8 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                   content: Text(l.message),
                                 ));
                               }, (r) {
+                                ref.refresh(assignedClassControllerProvider);
+                                ref.refresh(reportControllerProvider);
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   behavior: SnackBarBehavior.floating,
@@ -321,8 +325,8 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                   data.studentsList.map((item) => item.find).toList();
               SharedPreferences.getInstance().then((prefs) {
                 prefs.setStringList('stdname', studentname);
-                prefs.setStringList('stdroll', studentroll);
-                prefs.setStringList('stdid', studentid);
+                prefs.setStringList('stdroll', studentroll.cast<String>());
+                prefs.setStringList('stdid', studentid.cast<String>());
                 prefs.setStringList(
                     'stdvalue',
                     studentlistvalue

@@ -73,7 +73,7 @@ class _DashboardState extends ConsumerState<ProfileScreen> {
                                 ref.invalidate(
                                     absentReasonMissingStudentsProvider);
                                 await ref
-                                    .watch(authControllerProvider.notifier)
+                                    .read(authControllerProvider.notifier)
                                     .logout(context);
 
                                 if (context.mounted) {

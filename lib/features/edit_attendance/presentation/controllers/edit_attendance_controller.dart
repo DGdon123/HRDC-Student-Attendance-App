@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ym_daa_toce/utils/bottom_bar/bottom_bar.dart';
 
 import '../../../../utils/custom_navigation/app_nav.dart';
 import '../../../../utils/custom_snack_bar/custom_snack_bar.dart';
@@ -28,7 +29,11 @@ class EditAttendanceController
       state = AsyncValue.data(r);
       if (context.mounted) {
         showCustomSnackBar(r.message, context, isError: false);
-        pushAndRemoveUntil(context, const Dashboard());
+        pushAndRemoveUntil(
+            context,
+            const BottomBar(
+              initialIndex: 1,
+            ));
       }
     });
   }

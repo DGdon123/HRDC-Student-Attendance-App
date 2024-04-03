@@ -51,7 +51,7 @@ class PreviousAttendeneDetailScreen extends ConsumerWidget {
     final year = NepaliDateFormat.y().format(nepaliDate);
     final month = NepaliDateFormat.M().format(nepaliDate);
     final day = NepaliDateFormat.d().format(nepaliDate);
-    final showIcon = currentDate.hour < 12;
+    final showIcon = currentDate.hour < 24;
     String convertToNepaliDate(DateTime gregorianDate) {
       final NepaliDateTime nepaliDateTime =
           NepaliDateTime.fromDateTime(gregorianDate);
@@ -71,12 +71,12 @@ class PreviousAttendeneDetailScreen extends ConsumerWidget {
       "Status".tr(),
     ];
     AssignedClassModel show = AssignedClassModel(
-        class_id: '',
+        class_id: 0,
         class_name: '',
-        school_id: '',
+        school_id: 0,
         section_id: '',
         section: '',
-        teacher_id: '',
+        teacher_id: 0,
         teacher_name: '');
     var studentReasonList = ref.watch(editstudentReasonListProvider);
     final assingedClass = ref.watch(assignedClassControllerProvider);

@@ -16,6 +16,7 @@ import 'package:ym_daa_toce/const/app_const.dart';
 import 'package:ym_daa_toce/const/app_dimension.dart';
 import 'package:ym_daa_toce/const/app_fonts.dart';
 import 'package:ym_daa_toce/features/assign_class/data/models/attendance_reason/attendance_resons_model.dart';
+import 'package:ym_daa_toce/utils/bottom_bar/bottom_bar.dart';
 import 'package:ym_daa_toce/utils/mediaquery_extention.dart';
 import 'package:ym_daa_toce/features/offline/offline_attendance/data/models/offline_attendance_model.dart';
 import '../../../../../utils/custom_navigation/app_nav.dart';
@@ -265,7 +266,10 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
       onConfirmBtnTap: () {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(
+              builder: (context) => BottomBar(
+                    initialIndex: 1,
+                  )),
           (route) => false, // This condition removes all routes from the stack
         );
       },
@@ -313,7 +317,10 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
       onConfirmBtnTap: () {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(
+              builder: (context) => BottomBar(
+                    initialIndex: 1,
+                  )),
           (route) => false, // This condition removes all routes from the stack
         );
       },
@@ -361,7 +368,10 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
       onConfirmBtnTap: () {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(
+              builder: (context) => BottomBar(
+                    initialIndex: 1,
+                  )),
           (route) => false, // This condition removes all routes from the stack
         );
       },
@@ -409,7 +419,10 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
       onConfirmBtnTap: () {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(
+              builder: (context) => BottomBar(
+                    initialIndex: 1,
+                  )),
           (route) => false, // This condition removes all routes from the stack
         );
       },
@@ -473,7 +486,10 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
       onConfirmBtnTap: () {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(
+              builder: (context) => BottomBar(
+                    initialIndex: 1,
+                  )),
           (route) => false, // This condition removes all routes from the stack
         );
       },
@@ -522,7 +538,10 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
       onConfirmBtnTap: () {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(
+              builder: (context) => BottomBar(
+                    initialIndex: 1,
+                  )),
           (route) => false, // This condition removes all routes from the stack
         );
       },
@@ -656,7 +675,7 @@ class _AttendanceScreenState extends ConsumerState<OfflineAttendanceScreen> {
     //         sectionid: int.parse(widget.e.section_id))));
     // log(nepaliDate.toString());
     return Scaffold(
-      floatingActionButton: currentDate.hour < 12
+      floatingActionButton: currentDate.hour < 24
           ? isLoading
               ? Center(
                   child: CircularProgressIndicator(

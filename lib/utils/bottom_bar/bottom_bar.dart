@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ym_daa_toce/features/assign_class/presentation/controller/assign_class_controller.dart';
 import 'package:ym_daa_toce/features/auth/presentation/change_password/views/change_password_screen.dart';
 import 'package:ym_daa_toce/features/auth/presentation/login/controllers/auth_controller.dart';
 import 'package:ym_daa_toce/features/class_activities/presentation/views/class_activities_screen.dart';
 import 'package:ym_daa_toce/features/dashboard/presentation/views/dashboard.dart';
 import 'package:ym_daa_toce/features/profile/presentation/view_profile/profile_screen.dart';
+import 'package:ym_daa_toce/features/report/report_controller.dart';
 import '../../const/app_colors_const.dart';
 import '../nav_states/nav_notifier.dart';
 
@@ -24,7 +26,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
   static final List<Widget> _widgetOptions = [
     const ProfileScreen(),
     Dashboard(),
-    ClassActivitiesScreen(),
+    ChangePasswordScreen(),
   ];
 
   int _index = 0;
@@ -38,7 +40,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
   @override
   Widget build(BuildContext context) {
     var navIndex = ref.watch(navProvider);
-
+    
     return Scaffold(
       body: Center(
         child: _widgetOptions[navIndex.index],
@@ -61,7 +63,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           FloatingNavbarItem(
               icon: Icons.widgets_outlined, title: 'Dashboard'.tr()),
           FloatingNavbarItem(
-              icon: Icons.school_outlined, title: 'Class Activities'.tr()),
+              icon: Icons.lock_outline_rounded, title: 'Password'.tr()),
         ],
       ),
     );

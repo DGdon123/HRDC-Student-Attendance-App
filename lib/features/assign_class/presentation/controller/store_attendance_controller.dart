@@ -27,6 +27,7 @@ class StoreAttendanceController
       state = AsyncValue.data(r);
       if (context.mounted) {
         showCustomSnackBar(r.message, context, isError: false);
+        
         pushAndRemoveUntil(context, const Dashboard());
       }
     });

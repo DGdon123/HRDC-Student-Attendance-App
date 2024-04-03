@@ -20,9 +20,9 @@ class SearchResponseModel {
 }
 
 class StudentDataModel {
-  String studentId;
+  int studentId;
   String name;
-  String rollNo;
+  int rollNo;
   String attendanceStatus;
 
   StudentDataModel({

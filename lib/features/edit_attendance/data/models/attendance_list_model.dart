@@ -51,16 +51,16 @@ class AttendanceListModel {
 
 class Attendance {
   int id;
-  String class_id;
+  int class_id;
   String attendance_date;
   String attendance_date_bs;
   String attendance_date_ad;
-  String? reason_id;
-  String section_id;
-  String school_id;
-  String teacher_id;
-  String student_id;
-  String status;
+  int? reason_id;
+  int section_id;
+  int school_id;
+  int teacher_id;
+  int student_id;
+  int status;
   Attendance({
     required this.id,
     required this.class_id,
@@ -77,16 +77,16 @@ class Attendance {
 
   Attendance copyWith({
     int? id,
-    String? class_id,
+    int? class_id,
     String? attendance_date,
     String? attendance_date_bs,
     String? attendance_date_ad,
-    String? reason_id,
-    String? section_id,
-    String? school_id,
-    String? teacher_id,
-    String? student_id,
-    String? status,
+    int? reason_id,
+    int? section_id,
+    int? school_id,
+    int? teacher_id,
+    int? student_id,
+    int? status,
   }) {
     return Attendance(
       id: id ?? this.id,
@@ -122,16 +122,16 @@ class Attendance {
   factory Attendance.fromMap(Map<String, dynamic> map) {
     return Attendance(
       id: map['id'] as int,
-      class_id: map['class_id'] as String,
+      class_id: map['class_id'] as int,
       attendance_date: map['attendance_date'] as String,
       attendance_date_bs: map['attendance_date_bs'] as String,
       attendance_date_ad: map['attendance_date_ad'] as String,
-      reason_id: map['reason_id'] != null ? map['reason_id'] as String : null,
-      section_id: map['section_id'] as String,
-      school_id: map['school_id'] as String,
-      teacher_id: map['teacher_id'] as String,
-      student_id: map['student_id'] as String,
-      status: map['status'] as String,
+      reason_id: map['reason_id'] != null ? map['reason_id'] as int : null,
+      section_id: map['section_id'] as int,
+      school_id: map['school_id'] as int,
+      teacher_id: map['teacher_id'] as int,
+      student_id: map['student_id'] as int,
+      status: map['status'] as int,
     );
   }
 

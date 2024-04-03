@@ -15,7 +15,7 @@ class AttendanceRankingTable extends StatelessWidget {
     List<String> tableHeader = [
       "Roll No.".tr(),
       "Name".tr(),
-      "Status".tr(),
+      "Total Present".tr(),
     ];
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -55,7 +55,7 @@ class AttendanceRankingTable extends StatelessWidget {
                 children: [
                   Text(e.rollNumber.toString()),
                   Text(e.studentName),
-                  Text(e.totalPresent),
+                  Text(e.totalPresent), // Displaying 'Present' or 'Absent'
                   // Text(e.date),
                 ],
               ),

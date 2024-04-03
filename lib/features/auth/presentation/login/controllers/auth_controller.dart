@@ -71,20 +71,21 @@ class AuthController extends StateNotifier<AuthState> {
     }, (r) async {
       await dbClient.setData(dbKey: "token", value: r.toJson());
       await dbClient.setData(dbKey: "login", value: input.toJson());
+
       state = AuthState.loggedIn(r);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: const Duration(milliseconds: 1500),
-          content: Text(
-            "Welcome to HRDC",
-            style: const TextStyle(fontFamily: AppFont.kProductsanfont),
-          ),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //   duration: const Duration(milliseconds: 1500),
+        //   content: Text(
+        //     "Welcome to HRDC",
+        //     style: const TextStyle(fontFamily: AppFont.kProductsanfont),
+        //   ),
+        //   behavior: SnackBarBehavior.floating,
+        //   backgroundColor: Colors.green,
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        // ));
         Navigator.of(context).pushAndRemoveUntil(
             CupertinoPageRoute(
               builder: (context) => BottomBar(
@@ -96,10 +97,10 @@ class AuthController extends StateNotifier<AuthState> {
   }
 
   logout(BuildContext context) async {
+    state = const AuthState.loggedOut(); // Set the state to logged out
     Navigator.of(context).pushAndRemoveUntil(
         CupertinoPageRoute(
-          builder: (context) =>
-              LoginScreen(), // Example: set the initial index to 1
+          builder: (context) => LoginScreen(),
         ),
         (route) => false);
   }

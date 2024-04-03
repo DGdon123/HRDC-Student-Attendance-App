@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:nepali_date_picker/nepali_date_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -30,6 +31,7 @@ import 'package:ym_daa_toce/features/dashboard/presentation/controllers/attendan
 import 'package:ym_daa_toce/features/edit_attendance/data/models/attendance_list_model.dart';
 import 'package:ym_daa_toce/features/edit_attendance/presentation/views/edit_attendance_section.dart'
     as edit;
+import 'package:ym_daa_toce/features/language/language_provider.dart';
 import 'package:ym_daa_toce/features/profile/data/model/profile_model.dart';
 import 'package:ym_daa_toce/features/profile/presentation/view_profile/profile_screen.dart';
 import 'package:ym_daa_toce/features/report/report_controller.dart';
@@ -61,6 +63,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:switcher_button/switcher_button.dart';
 import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
+import 'package:provider/provider.dart' as providers;
 
 List<String> percentList = [">=90%", "<90%>75%", "<75"];
 
@@ -134,10 +137,12 @@ class _DashboardState extends ConsumerState<Dashboard> {
   AssignedClassModel? show;
   OfflineClassModel? what;
   AttendanceListModel? aero;
-
+  var logger = Logger(
+    printer: PrettyPrinter(),
+  );
   Future<void> _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(
+    prefs.setInt(
       'class_id',
       assignedData!.class_id,
     );
@@ -146,7 +151,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
       assignedData!.class_name,
     );
 
-    prefs.setString(
+    prefs.setInt(
       'school_id',
       assignedData!.school_id,
     );
@@ -160,7 +165,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
     );
     prefs.setInt(
       'teacher_id',
-      int.parse(assignedData!.teacher_id),
+     assignedData!.teacher_id,
     );
     prefs.setString(
       'teacher_name',
@@ -269,10 +274,13 @@ class _DashboardState extends ConsumerState<Dashboard> {
   int _current = 0;
   bool trap = false;
   final CarouselController _controller = CarouselController();
-  String? class4;
-  String? section4;
+  int? class4;
+  int? section4;
   @override
   Widget build(BuildContext context) {
+    final popupProvider =
+        providers.Provider.of<LanguageProvider>(context, listen: false);
+    final pop = popupProvider.dialogAlreadyShown;
     final originalDate = NepaliDateTime.now();
     final currentDate = DateTime.now();
     final dateFormat = DateFormat('yyyy-MM-dd');
@@ -305,7 +313,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
     assingedClass.when(
       data: (value) {
         class4 = value.class_id;
-        section4 = value.section_id;
+        section4 = int.parse(value.section_id);
       },
       error: (error, stackTrace) => Text(error.toString()),
       loading: () => Center(),
@@ -332,25 +340,16 @@ class _DashboardState extends ConsumerState<Dashboard> {
                   size: 40,
                   onColor: AppColorConst.kappWhiteColor,
                   offColor: CupertinoColors.systemGrey,
-                  value: trap,
+                  value: pop,
                   onChange: (value) {
-                    if (trap == false) {
-                      final newLocale = _currentLocale.languageCode == 'ne'
-                          ? Locale('en', 'US')
-                          : Locale('ne', 'NP');
-                      EasyLocalization.of(context)?.setLocale(newLocale);
-                      setState(() {
-                        _currentLocale = newLocale;
-                      });
-                    } else {
-                      final newLocale = _currentLocale.languageCode == 'en'
-                          ? Locale('ne', 'NP')
-                          : Locale('en', 'US');
-                      EasyLocalization.of(context)?.setLocale(newLocale);
-                      setState(() {
-                        _currentLocale = newLocale;
-                      });
-                    }
+                    final newLocale = _currentLocale.languageCode == 'ne'
+                        ? Locale('en', 'US')
+                        : Locale('ne', 'NP');
+                    EasyLocalization.of(context)?.setLocale(newLocale);
+                    setState(() {
+                      _currentLocale = newLocale;
+                    });
+                    popupProvider.setDialogAlreadyShown(value);
                   },
                 ),
               ),
@@ -671,10 +670,10 @@ class _DashboardState extends ConsumerState<Dashboard> {
                                                               .toString(),
                                                           teacherName: value
                                                               .teacher_name,
-                                                          classid: int.parse(
-                                                              value.class_id),
-                                                          sectionid: int.parse(
-                                                              value.section_id),
+                                                          classid:
+                                                              value.class_id,
+                                                          sectionid:
+                                                              int.parse(value.section_id),
                                                         ),
                                                       );
                                                     }
@@ -835,56 +834,47 @@ class _DashboardState extends ConsumerState<Dashboard> {
                                                             items:
                                                                 data.map((e) {
                                                               date = e;
-                                                              if (TodayCardOne !=
-                                                                  null) {
-                                                                return TodayCardOne(
-                                                                  hello: hello,
-                                                                  assign: value,
-                                                                  section: value
-                                                                      .section,
-                                                                  onPressed: () =>
-                                                                      normalNav(
-                                                                    context,
-                                                                    PreviousAttendeneDetailScreen(
-                                                                      classid: int
-                                                                          .parse(
-                                                                              value.class_id),
-                                                                      sectionid:
-                                                                          int.parse(
-                                                                              value.section_id),
-                                                                      sectionName:
-                                                                          value
-                                                                              .section,
-                                                                      className:
-                                                                          value
-                                                                              .class_name,
-                                                                      classNum: value
-                                                                          .class_id
-                                                                          .toString(),
-                                                                      date: e
-                                                                          .attendanceDateAd,
-                                                                      sectionNum: value
-                                                                          .section_id
-                                                                          .toString(),
-                                                                      teacherName:
-                                                                          value
-                                                                              .teacher_name,
-                                                                    ),
+                                                              return TodayCardOne(
+                                                                hello: hello,
+                                                                assign: value,
+                                                                section: value
+                                                                    .section,
+                                                                onPressed: () =>
+                                                                    normalNav(
+                                                                  context,
+                                                                  PreviousAttendeneDetailScreen(
+                                                                    classid: value
+                                                                        .class_id,
+                                                                    sectionid: int.parse(value
+                                                                        .section_id),
+                                                                    sectionName:
+                                                                        value
+                                                                            .section,
+                                                                    className: value
+                                                                        .class_name,
+                                                                    classNum: value
+                                                                        .class_id
+                                                                        .toString(),
+                                                                    date: e
+                                                                        .attendanceDateAd,
+                                                                    sectionNum: value
+                                                                        .section_id
+                                                                        .toString(),
+                                                                    teacherName:
+                                                                        value
+                                                                            .teacher_name,
                                                                   ),
-                                                                  classNum: value
-                                                                      .class_id
-                                                                      .toString(),
-                                                                  date: e
-                                                                      .attendanceDateAd,
-                                                                  teacherName: value
-                                                                      .teacher_name,
-                                                                  className: value
-                                                                      .class_name,
-                                                                );
-                                                              } else {
-                                                                // Return some other widget or a placeholder if TodayCardOne is null.
-                                                                return Container();
-                                                              }
+                                                                ),
+                                                                classNum: value
+                                                                    .class_id
+                                                                    .toString(),
+                                                                date: e
+                                                                    .attendanceDateAd,
+                                                                teacherName: value
+                                                                    .teacher_name,
+                                                                className: value
+                                                                    .class_name,
+                                                              );
                                                             }).toList(),
                                                           ),
                                                           SizedBox(
@@ -938,9 +928,8 @@ class _DashboardState extends ConsumerState<Dashboard> {
                               data: (assigned) => ref
                                   .watch(attendanceRankingControllerProvider(
                                       AttendanceRankParams(
-                                          classId: int.parse(assigned.class_id),
-                                          teacherId:
-                                              int.parse(assigned.section_id))))
+                                          classId: assigned.class_id,
+                                          teacherId: int.parse(assigned.section_id))))
                                   .when(
                                       data: (rank) => Column(
                                             children: [
@@ -986,233 +975,313 @@ class _DashboardState extends ConsumerState<Dashboard> {
                                 totalLines: 5,
                               )),
                             ),
-                            SizedBox(
-                              height: context.heightPct(0.01),
-                            ),
-                            Center(
-                                child: Text(
-                              "Attendance Reports".tr(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: AppColorConst.kappprimaryColorBlue),
-                            )),
-                            SizedBox(
-                              height: context.heightPct(0.04),
-                            ),
-                            Center(
-                                child: Text(
-                              "Students Regularity in Pie Chart".tr(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 14,
-                              ),
-                            )),
-                            ref.watch(reportControllerProvider).when(
-                                  data: (data) {
-                                    double maleValue = ((data.males
-                                                .map((e) => int.parse(e))
-                                                .fold(
-                                                    0,
-                                                    (previousValue, element) =>
-                                                        previousValue +
-                                                        element) /
-                                            (data.males
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue +
-                                                            element) +
-                                                data.females.map((e) => int.parse(e)).fold(
-                                                    0,
-                                                    (previousValue, element) =>
-                                                        previousValue +
-                                                        element) +
-                                                data.others.map((e) => int.parse(e)).fold(
-                                                    0,
-                                                    (previousValue, element) =>
-                                                        previousValue + element))) *
-                                        100);
-                                    double femaleValue = ((data.females.map((e) => int.parse(e)).fold(
-                                                0,
-                                                (previousValue, element) =>
-                                                    previousValue + element) /
-                                            (data.males
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue +
-                                                            element) +
-                                                data.females
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue +
-                                                            element) +
-                                                data.others
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue + element))) *
-                                        100);
-                                    double othersValue = ((data.others.map((e) => int.parse(e)).fold(
-                                                0,
-                                                (previousValue, element) =>
-                                                    previousValue + element) /
-                                            (data.males
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue +
-                                                            element) +
-                                                data.females
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue +
-                                                            element) +
-                                                data.others
-                                                    .map((e) => int.parse(e))
-                                                    .fold(
-                                                        0,
-                                                        (previousValue, element) =>
-                                                            previousValue + element))) *
-                                        100);
-                                    List<PieChartSectionData>
-                                        _createSections() {
-                                      final sections = <PieChartSectionData>[];
+                            Consumer(
+                              builder: (context, watch, child) {
+                                final reportState =
+                                    ref.watch(reportControllerProvider);
+                                if (reportState.hasValue) {
+                                  final data = reportState.value!;
 
-                                      sections.add(
-                                        PieChartSectionData(
-                                          color: Color(0xff2DA9D8),
-                                          value: maleValue,
-                                          title:
-                                              '${maleValue.toStringAsFixed(2)}%',
-                                          titleStyle:
-                                              TextStyle(color: Colors.white),
-                                          showTitle: true,
+                                  final allZeros = [
+                                    data.females,
+                                    data.males,
+                                  ].every(
+                                      (list) => list.every((e) => e == "0"));
+
+                                  print('Data Females: ${data.females}');
+                                  print('Data Males: ${data.males}');
+                                  print('All Zeros: $allZeros');
+
+                                  if (allZeros) {
+                                    return SizedBox(
+                                      height: 200,
+                                    ); // Don't execute if all values are zero
+                                  } else {
+                                    // Build your widget using the data
+                                    return Column(
+                                      children: [
+                                        SizedBox(
+                                          height: context.heightPct(0.01),
                                         ),
-                                      );
-
-                                      sections.add(
-                                        PieChartSectionData(
-                                          color: Color(0xffB73377),
-                                          value: femaleValue,
-                                          title:
-                                              '${femaleValue.toStringAsFixed(2)}%',
-                                          titleStyle:
-                                              TextStyle(color: Colors.white),
-                                          showTitle: true,
+                                        Center(
+                                            child: Text(
+                                          "Attendance Reports".tr(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: AppColorConst
+                                                  .kappprimaryColorBlue),
+                                        )),
+                                        SizedBox(
+                                          height: context.heightPct(0.04),
                                         ),
-                                      );
+                                        Center(
+                                            child: Text(
+                                          "Students Regularity in Pie Chart"
+                                              .tr(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14,
+                                          ),
+                                        )),
+                                        ref
+                                            .watch(reportControllerProvider)
+                                            .when(
+                                              data: (data) {
+                                                double maleValue = ((data.males
+                                                            .map((e) =>
+                                                                int.parse(e))
+                                                            .fold(
+                                                                0,
+                                                                (previousValue,
+                                                                        element) =>
+                                                                    previousValue +
+                                                                    element) /
+                                                        (data.males.map((e) => int.parse(e)).fold(0, (previousValue, element) => previousValue + element) +
+                                                            data.females.map((e) => int.parse(e)).fold(
+                                                                0,
+                                                                (previousValue,
+                                                                        element) =>
+                                                                    previousValue +
+                                                                    element) +
+                                                            data.others
+                                                                .map((e) => int.parse(e))
+                                                                .fold(0, (previousValue, element) => previousValue + element))) *
+                                                    100);
+                                                double femaleValue = ((data.females
+                                                            .map((e) =>
+                                                                int.parse(e))
+                                                            .fold(
+                                                                0,
+                                                                (previousValue,
+                                                                        element) =>
+                                                                    previousValue +
+                                                                    element) /
+                                                        (data.males.map((e) => int.parse(e)).fold(0, (previousValue, element) => previousValue + element) +
+                                                            data.females.map((e) => int.parse(e)).fold(
+                                                                0,
+                                                                (previousValue,
+                                                                        element) =>
+                                                                    previousValue +
+                                                                    element) +
+                                                            data.others
+                                                                .map((e) => int.parse(e))
+                                                                .fold(0, (previousValue, element) => previousValue + element))) *
+                                                    100);
+                                                double othersValue = ((data.others
+                                                            .map((e) =>
+                                                                int.parse(e))
+                                                            .fold(
+                                                                0,
+                                                                (previousValue,
+                                                                        element) =>
+                                                                    previousValue +
+                                                                    element) /
+                                                        (data.males.map((e) => int.parse(e)).fold(0, (previousValue, element) => previousValue + element) +
+                                                            data.females.map((e) => int.parse(e)).fold(
+                                                                0,
+                                                                (previousValue,
+                                                                        element) =>
+                                                                    previousValue +
+                                                                    element) +
+                                                            data.others
+                                                                .map((e) => int.parse(e))
+                                                                .fold(0, (previousValue, element) => previousValue + element))) *
+                                                    100);
+                                                List<PieChartSectionData>
+                                                    _createSections() {
+                                                  final sections =
+                                                      <PieChartSectionData>[];
 
-                                      sections.add(
-                                        PieChartSectionData(
-                                          color: Colors.yellow,
-                                          value: othersValue,
-                                          title:
-                                              '${othersValue.toStringAsFixed(2)}%',
-                                          titleStyle:
-                                              TextStyle(color: Colors.white),
-                                          showTitle: true,
-                                        ),
-                                      );
+                                                  sections.add(
+                                                    PieChartSectionData(
+                                                      color: Color(0xff2DA9D8),
+                                                      value: maleValue,
+                                                      title:
+                                                          '${maleValue.toStringAsFixed(2)}%',
+                                                      titleStyle: TextStyle(
+                                                          color: Colors.white),
+                                                      showTitle: true,
+                                                    ),
+                                                  );
 
-                                      return sections;
-                                    }
+                                                  sections.add(
+                                                    PieChartSectionData(
+                                                      color: Color(0xffB73377),
+                                                      value: femaleValue,
+                                                      title:
+                                                          '${femaleValue.toStringAsFixed(2)}%',
+                                                      titleStyle: TextStyle(
+                                                          color: Colors.white),
+                                                      showTitle: true,
+                                                    ),
+                                                  );
 
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 20),
-                                      child: Card(
-                                        color: Colors.white,
-                                        elevation: 2.0,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const SizedBox(
-                                              height: 15,
-                                            ),
-                                            SizedBox(
-                                              height: 200,
-                                              child: PieChart(
-                                                PieChartData(
-                                                    sections:
-                                                        _createSections()),
-                                                swapAnimationCurve:
-                                                    Curves.elasticInOut,
-                                                swapAnimationDuration:
-                                                    Duration(seconds: 60),
+                                                  sections.add(
+                                                    PieChartSectionData(
+                                                      color: Colors.yellow,
+                                                      value: othersValue,
+                                                      title:
+                                                          '${othersValue.toStringAsFixed(2)}%',
+                                                      titleStyle: TextStyle(
+                                                          color: Colors.white),
+                                                      showTitle: true,
+                                                    ),
+                                                  );
+
+                                                  return sections;
+                                                }
+
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 40,
+                                                      vertical: 20),
+                                                  child: Card(
+                                                    color: Colors.white,
+                                                    elevation: 2.0,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 200,
+                                                          child: PieChart(
+                                                            PieChartData(
+                                                                sections:
+                                                                    _createSections()),
+                                                            swapAnimationCurve:
+                                                                Curves
+                                                                    .elasticInOut,
+                                                            swapAnimationDuration:
+                                                                Duration(
+                                                                    seconds:
+                                                                        60),
+                                                          ),
+                                                        ).animate().rotate(
+                                                            duration: Duration(
+                                                                seconds: 8)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              error: (err, s) => Center(
+                                                child: Text(
+                                                    "Error loading data".tr()),
                                               ),
-                                            ).animate().rotate(
-                                                duration: Duration(seconds: 8)),
-                                            const SizedBox(
-                                              height: 15,
+                                              loading: () => Center(
+                                                  child: CardPageSkeleton(
+                                                totalLines: 5,
+                                              )),
                                             ),
-                                          ],
-                                        ),
-                                      ),
+                                      ],
                                     );
-                                  },
-                                  error: (err, s) => Center(
-                                    child: Text("Error loading data".tr()),
-                                  ),
-                                  loading: () => Center(
-                                      child: CardPageSkeleton(
-                                    totalLines: 5,
-                                  )),
-                                ),
+                                  }
+                                } else if (reportState is Error) {
+                                  return Center(
+                                    child: Text(
+                                        "Error loading data"), // Display error message
+                                  );
+                                } else {
+                                  return SizedBox(); // Handle other states if needed
+                                }
+                              },
+                            ),
                             SizedBox(
                               height: AppDimensions.paddingDEFAULT,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 3.h,
-                                  width: 10.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                    color: Color(0xff2DA9D8),
-                                  ),
-                                ),
-                                SizedBox(width: AppDimensions.paddingSMALL),
-                                Text("Boys".tr()),
-                                SizedBox(width: AppDimensions.paddingDEFAULT),
-                                Container(
-                                  height: 3.h,
-                                  width: 10.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                    color: Color(0xffB73377),
-                                  ),
-                                ),
-                                SizedBox(width: AppDimensions.paddingSMALL),
-                                Text("Girls".tr()),
-                                SizedBox(width: AppDimensions.paddingDEFAULT),
-                                Container(
-                                  height: 3.h,
-                                  width: 10.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                    color: Colors.yellow,
-                                  ),
-                                ),
-                                SizedBox(width: AppDimensions.paddingSMALL),
-                                Text("Others".tr()),
-                              ],
+                            Consumer(
+                              builder: (context, watch, child) {
+                                final reportState =
+                                    ref.watch(reportControllerProvider);
+                                if (reportState.hasValue) {
+                                  final data = reportState.value!;
+                                  logger.d(data.females);
+                                  final allZeros = [
+                                    data.females,
+                                    data.males,
+                                  ].every(
+                                      (list) => list.every((e) => e == "0"));
+
+                                  print('Data Females: ${data.females}');
+                                  print('Data Males: ${data.males}');
+                                  print('All Zeros: $allZeros');
+
+                                  if (allZeros) {
+                                    return SizedBox(
+                                      height: 200,
+                                    ); // Don't execute if all values are zero
+                                  } else {
+                                    // Build your widget using the data
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 3.h,
+                                          width: 10.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                            color: Color(0xff2DA9D8),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                            width: AppDimensions.paddingSMALL),
+                                        Text("Boys".tr()),
+                                        SizedBox(
+                                            width:
+                                                AppDimensions.paddingDEFAULT),
+                                        Container(
+                                          height: 3.h,
+                                          width: 10.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                            color: Color(0xffB73377),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                            width: AppDimensions.paddingSMALL),
+                                        Text("Girls".tr()),
+                                        SizedBox(
+                                            width:
+                                                AppDimensions.paddingDEFAULT),
+                                        Container(
+                                          height: 3.h,
+                                          width: 10.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                            color: Colors.yellow,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                            width: AppDimensions.paddingSMALL),
+                                        Text("Others".tr()),
+                                      ],
+                                    );
+                                  }
+                                } else if (reportState is Error) {
+                                  return Center(
+                                    child: Text(
+                                        "Error loading data"), // Display error message
+                                  );
+                                } else {
+                                  return SizedBox(); // Handle other states if needed
+                                }
+                              },
                             ),
                             SizedBox(
                               height: AppDimensions.paddingDEFAULT,
@@ -1220,120 +1289,189 @@ class _DashboardState extends ConsumerState<Dashboard> {
                             SizedBox(
                               height: AppDimensions.paddingEXTRALARGE,
                             ),
-                            Center(
-                                child: Text(
-                              "Students Regularity in Bar Graph".tr(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 14,
-                              ),
-                            )),
-                            SizedBox(
-                              height: context.heightPct(0.04),
-                            ),
-                            ref.watch(reportControllerProvider).when(
-                                  data: (data) {
-                                    List<DataItem> _myData = [];
+                            Consumer(
+                              builder: (context, watch, child) {
+                                final reportState =
+                                    ref.watch(reportControllerProvider);
+                                if (reportState.hasValue) {
+                                  final data = reportState.value!;
+                                  logger.d(data.females);
 
-                                    for (int i = 0;
-                                        i < data.labels.length;
-                                        i++) {
-                                      double y1 = double.parse(data.males[i]);
-                                      double y2 = double.parse(data.females[i]);
-                                      double y3 = double.parse(data.others[i]);
+                                  final allZeros = [
+                                    data.females,
+                                    data.males,
+                                  ].every(
+                                      (list) => list.every((e) => e == "0"));
 
-                                      _myData.add(DataItem(
-                                        x: i,
-                                        y1: y1,
-                                        y2: y2,
-                                        y3: y3,
-                                      ));
-                                    }
+                                  print('Data Females: ${data.females}');
+                                  print('Data Males: ${data.males}');
+                                  print('All Zeros: $allZeros');
 
+                                  if (allZeros) {
+                                    return SizedBox(
+                                      height: 200,
+                                    ); // Don't execute if all values are zero
+                                  } else {
+                                    // Build your widget using the data
                                     return Column(
                                       children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 5.0),
-                                          child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: SizedBox(
-                                                height: context.heightPct(0.25),
-                                                width: context.widthPct(0.94),
-                                                child: BarChart(
-                                                  BarChartData(
-                                                    titlesData: FlTitlesData(
-                                                      leftTitles: AxisTitles(
-                                                        sideTitles: SideTitles(
-                                                          reservedSize: 35,
-                                                          interval: 5,
-                                                          showTitles: true,
-                                                        ),
-                                                      ),
-                                                      topTitles: AxisTitles(),
-                                                      rightTitles: AxisTitles(),
-                                                      bottomTitles: AxisTitles(
-                                                        sideTitles: SideTitles(
-                                                          showTitles: true,
-                                                          getTitlesWidget:
-                                                              (value, _) =>
-                                                                  getTitles(
-                                                                      value,
-                                                                      data),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    gridData:
-                                                        FlGridData(show: true),
-                                                    borderData: FlBorderData(
-                                                      border: Border.symmetric(
-                                                        vertical: BorderSide(
-                                                            width: 1),
-                                                      ),
-                                                    ),
-                                                    barGroups:
-                                                        _myData.map((dataItem) {
-                                                      return BarChartGroupData(
-                                                        x: dataItem.x,
-                                                        barRods: [
-                                                          BarChartRodData(
-                                                            color: Color(
-                                                                0xff2DA9D8),
-                                                            toY: dataItem.y1,
-                                                          ),
-                                                          BarChartRodData(
-                                                            color: Color(
-                                                                0xffB73377),
-                                                            toY: dataItem.y2,
-                                                          ),
-                                                          BarChartRodData(
-                                                            color:
-                                                                Colors.yellow,
-                                                            toY: dataItem.y3,
-                                                          ),
-                                                        ],
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                  swapAnimationDuration:
-                                                      Duration(
-                                                          milliseconds: 500),
-                                                  swapAnimationCurve:
-                                                      Curves.easeInOut,
-                                                ),
-                                              ).animate().scaleY(
-                                                  duration:
-                                                      Duration(seconds: 8))),
+                                        Center(
+                                            child: Text(
+                                          "Students Regularity in Bar Graph"
+                                              .tr(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14,
+                                          ),
+                                        )),
+                                        SizedBox(
+                                          height: context.heightPct(0.04),
                                         ),
+                                        ref
+                                            .watch(reportControllerProvider)
+                                            .when(
+                                              data: (data) {
+                                                List<DataItem> _myData = [];
+
+                                                for (int i = 0;
+                                                    i < data.labels.length;
+                                                    i++) {
+                                                  double y1 = double.parse(
+                                                      data.males[i]);
+                                                  double y2 = double.parse(
+                                                      data.females[i]);
+                                                  double y3 = double.parse(
+                                                      data.others[i]);
+
+                                                  _myData.add(DataItem(
+                                                    x: i,
+                                                    y1: y1,
+                                                    y2: y2,
+                                                    y3: y3,
+                                                  ));
+                                                }
+
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5.0),
+                                                  child: SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: SizedBox(
+                                                        height: context
+                                                            .heightPct(0.25),
+                                                        width: context
+                                                            .widthPct(0.94),
+                                                        child: BarChart(
+                                                          BarChartData(
+                                                            titlesData:
+                                                                FlTitlesData(
+                                                              leftTitles:
+                                                                  AxisTitles(
+                                                                sideTitles:
+                                                                    SideTitles(
+                                                                  reservedSize:
+                                                                      35,
+                                                                  interval: 5,
+                                                                  showTitles:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                              topTitles:
+                                                                  AxisTitles(),
+                                                              rightTitles:
+                                                                  AxisTitles(),
+                                                              bottomTitles:
+                                                                  AxisTitles(
+                                                                sideTitles:
+                                                                    SideTitles(
+                                                                  showTitles:
+                                                                      true,
+                                                                  getTitlesWidget: (value,
+                                                                          _) =>
+                                                                      getTitles(
+                                                                          value,
+                                                                          data),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            gridData:
+                                                                FlGridData(
+                                                                    show: true),
+                                                            borderData:
+                                                                FlBorderData(
+                                                              border: Border
+                                                                  .symmetric(
+                                                                vertical:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            1),
+                                                              ),
+                                                            ),
+                                                            barGroups: _myData
+                                                                .map(
+                                                                    (dataItem) {
+                                                              return BarChartGroupData(
+                                                                x: dataItem.x,
+                                                                barRods: [
+                                                                  BarChartRodData(
+                                                                    color: Color(
+                                                                        0xff2DA9D8),
+                                                                    toY:
+                                                                        dataItem
+                                                                            .y1,
+                                                                  ),
+                                                                  BarChartRodData(
+                                                                    color: Color(
+                                                                        0xffB73377),
+                                                                    toY:
+                                                                        dataItem
+                                                                            .y2,
+                                                                  ),
+                                                                  BarChartRodData(
+                                                                    color: Colors
+                                                                        .yellow,
+                                                                    toY:
+                                                                        dataItem
+                                                                            .y3,
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            }).toList(),
+                                                          ),
+                                                          swapAnimationDuration:
+                                                              Duration(
+                                                                  milliseconds:
+                                                                      500),
+                                                          swapAnimationCurve:
+                                                              Curves.easeInOut,
+                                                        ),
+                                                      ).animate().scaleY(
+                                                          duration: Duration(
+                                                              seconds: 8))),
+                                                );
+                                              },
+                                              error: (err, s) =>
+                                                  Text(err.toString()),
+                                              loading: () => Center(
+                                                  child: CardPageSkeleton(
+                                                totalLines: 5,
+                                              )),
+                                            ),
                                       ],
                                     );
-                                  },
-                                  error: (err, s) => Text(err.toString()),
-                                  loading: () => Center(
-                                      child: CardPageSkeleton(
-                                    totalLines: 5,
-                                  )),
-                                ),
+                                  }
+                                } else if (reportState is Error) {
+                                  return Center(
+                                    child: Text(
+                                        "Error loading data"), // Display error message
+                                  );
+                                } else {
+                                  return SizedBox(); // Handle other states if needed
+                                }
+                              },
+                            ),
                             SizedBox(
                               height: AppDimensions.paddingDEFAULT,
                             ),

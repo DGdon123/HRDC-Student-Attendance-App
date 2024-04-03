@@ -15,8 +15,10 @@ import 'package:ym_daa_toce/const/app_dimension.dart';
 import 'package:ym_daa_toce/const/app_fonts.dart';
 import 'package:ym_daa_toce/features/assign_class/data/models/assign_class_studenslist_model/class_section_params_model.dart';
 import 'package:ym_daa_toce/features/assign_class/data/models/attendance_reason/attendance_resons_model.dart';
+import 'package:ym_daa_toce/features/assign_class/presentation/controller/assign_class_controller.dart';
 import 'package:ym_daa_toce/features/assign_class/presentation/controller/assign_class_detail_controller.dart';
 import 'package:ym_daa_toce/features/dashboard/presentation/views/dashboard.dart';
+import 'package:ym_daa_toce/utils/bottom_bar/bottom_bar.dart';
 import 'package:ym_daa_toce/utils/custom_navigation/app_nav.dart';
 import 'package:ym_daa_toce/utils/mediaquery_extention.dart';
 
@@ -24,6 +26,7 @@ import '../../../assign_class/data/data_source/assign_class_data_source.dart';
 import '../../../assign_class/data/models/assign_class_model/assign_class_model.dart';
 import '../../../assign_class/data/models/assign_class_studenslist_model/assign_class_students_list_model.dart';
 import '../../../assign_class/presentation/controller/top_three_attendance_controller.dart';
+import '../../../report/report_controller.dart';
 import '../../data/models/attendance_list_model.dart';
 import '../../data/repository/edit_attendance_repo.dart';
 import '../controllers/attendance_list_controller.dart';
@@ -157,23 +160,20 @@ class _EditAttendanceScreenState extends ConsumerState<EditAttendanceScreen> {
     log(text.toString());
     final assingedClass = ref.watch(assignedClassDetailControllerProvider(
         ClassSectionParams(
-            classId: int.parse(widget.e.class_id),
+            classId: widget.e.class_id,
             sectionid: int.parse(widget.e.section_id))));
     var attendancelist = ref.watch(attendancelistControllerProvider(
       ClassSectionParams(
-        classId: int.parse(widget.e.class_id),
+        classId: widget.e.class_id,
         sectionid: int.parse(widget.e.section_id),
       ),
     ));
     log(attendancelist.toString());
 
     return Scaffold(
-        floatingActionButton: currentDate.hour < 12
+        floatingActionButton: currentDate.hour < 24
             ? isLoading
-                ? Center(
-                    child: CardPageSkeleton(
-                    totalLines: 5,
-                  ))
+                ? Center()
                 : SizedBox(
                     height: 50,
                     child: isLoading
@@ -227,16 +227,16 @@ class _EditAttendanceScreenState extends ConsumerState<EditAttendanceScreen> {
                                 return;
                               }
                               Map<String, dynamic> dataObject = {
-                                "class_id": int.parse(widget.e.class_id),
+                                "class_id": widget.e.class_id,
                                 "attendance_date": nepaliCurrentDate,
                                 // "attendance_date": "2024-01-03",
                                 "attendance_date_ad": date,
                                 // "attendance_date_ad": "2024-01-03",
                                 "attendance_date_bs": devanagariDate,
                                 // "attendance_date_bs": "2081-01-03",
-                                "school_id": int.parse(widget.e.school_id),
-                                "teacher_id": int.parse(widget.e.teacher_id),
-                                "section_id": int.parse(widget.e.section_id),
+                                "school_id": widget.e.school_id,
+                                "teacher_id": widget.e.teacher_id,
+                                "section_id": widget.e.section_id,
                                 "student_id": studentReasonList
                                     .map((e) => e.studentId)
                                     .toList(),
@@ -260,7 +260,7 @@ class _EditAttendanceScreenState extends ConsumerState<EditAttendanceScreen> {
                                   .read(editrepoProvider)
                                   .editrepo(
                                       ClassSectionParams(
-                                          classId: int.parse(widget.e.class_id),
+                                          classId: widget.e.class_id,
                                           sectionid:
                                               int.parse(widget.e.section_id)),
                                       dataObject);
@@ -278,10 +278,14 @@ class _EditAttendanceScreenState extends ConsumerState<EditAttendanceScreen> {
                                   backgroundColor: Colors.green,
                                   content: Text(r.message),
                                 ));
+                                ref.refresh(assignedClassControllerProvider);
+                                ref.refresh(reportControllerProvider);
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Dashboard()),
+                                      builder: (context) => BottomBar(
+                                            initialIndex: 1,
+                                          )),
                                   (route) =>
                                       false, // This condition removes all routes from the stack
                                 );
@@ -318,7 +322,7 @@ class _EditAttendanceScreenState extends ConsumerState<EditAttendanceScreen> {
               final attendancelist = ref
                   .watch(attendancelistControllerProvider(
                     ClassSectionParams(
-                      classId: int.parse(widget.e.class_id),
+                      classId: widget.e.class_id,
                       sectionid: int.parse(widget.e.section_id),
                     ),
                   ))

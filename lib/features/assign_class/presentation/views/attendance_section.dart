@@ -165,8 +165,7 @@ class _AttendanceSectionState extends ConsumerState<AttendanceSection> {
                                           absentButtonSelected = !value;
                                           final inputData = StudentReasonModel(
                                             status: 1,
-                                            studentId: int.parse(
-                                                widget.student.studentId),
+                                            studentId: widget.student.studentId,
                                           );
                                           List<int> studentIdList =
                                               studentReasonList
@@ -225,8 +224,7 @@ class _AttendanceSectionState extends ConsumerState<AttendanceSection> {
                                         presentButtonSelected = !value;
                                         final inputData = StudentReasonModel(
                                           status: 0,
-                                          studentId: int.parse(
-                                              widget.student.studentId),
+                                          studentId: widget.student.studentId,
                                         );
                                         List<int> studentIdList =
                                             studentReasonList
@@ -310,8 +308,7 @@ class _AttendanceSectionState extends ConsumerState<AttendanceSection> {
                                   }
                                   final inputData = StudentReasonModel(
                                       status: 0,
-                                      studentId:
-                                          int.parse(widget.student.studentId),
+                                      studentId: widget.student.studentId,
                                       reasonId: absentReasons[
                                               absentReasons.indexOf(e)]
                                           .id);
@@ -348,8 +345,7 @@ class _AttendanceSectionState extends ConsumerState<AttendanceSection> {
                                 if (!value) {
                                   final inputData = StudentReasonModel(
                                       status: 0,
-                                      studentId:
-                                          int.parse(widget.student.studentId),
+                                      studentId: widget.student.studentId,
                                       reasonId: absentReasons[
                                               absentReasons.indexOf(e)]
                                           .id);
@@ -361,7 +357,7 @@ class _AttendanceSectionState extends ConsumerState<AttendanceSection> {
                                       .first;
                                   if (prevData == inputData) {
                                     missedStudents
-                                        .add(widget.student.studentId);
+                                        .add(widget.student.studentId as String);
                                     ref
                                         .watch(
                                             absentReasonMissingStudentsProvider

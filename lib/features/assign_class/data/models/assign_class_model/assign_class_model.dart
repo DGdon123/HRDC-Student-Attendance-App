@@ -3,13 +3,13 @@ import 'dart:convert';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class AssignedClassModel {
-  String school_id;
-  String class_id;
+  int school_id;
+  int class_id;
   String class_name;
   String section_id;
   String section;
   String teacher_name;
-  String teacher_id;
+  int teacher_id;
   AssignedClassModel(
       {required this.school_id,
       required this.class_id,
@@ -20,13 +20,13 @@ class AssignedClassModel {
       required this.teacher_id});
 
   AssignedClassModel copyWith(
-      {String? school_id,
-      String? class_id,
+      {int? school_id,
+      int? class_id,
       String? class_name,
       String? section_id,
       String? section,
       String? teacher_name,
-      String? teacher_id}) {
+      int? teacher_id}) {
     return AssignedClassModel(
         school_id: school_id ?? this.school_id,
         class_id: class_id ?? this.class_id,
@@ -51,13 +51,13 @@ class AssignedClassModel {
 
   factory AssignedClassModel.fromMap(Map<String, dynamic> map) {
     return AssignedClassModel(
-        school_id: map['school_id'].toString() ?? "",
-        class_id: map['class_id'].toString() ?? "",
+        school_id: map['school_id'] ?? "",
+        class_id: map['class_id'] ?? "",
         class_name: map['class_name'].toString() ?? "",
-        section_id: map['section_id'].toString() ?? "",
+        section_id: map['section_id'] ?? "",
         section: map['section'].toString() ?? "",
         teacher_name: map['teacher_name'].toString() ?? "",
-        teacher_id: map["teacher_id"].toString() ?? "");
+        teacher_id: map["teacher_id"]?? "");
   }
 
   String toJson() => json.encode(toMap());
